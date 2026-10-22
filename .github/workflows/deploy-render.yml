@@ -12,15 +12,21 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Extract Release Asset
-        run: |
-          mkdir -p dist
-          # Added .com to the URL below
-          curl -L "https://github.com/${{ github.repository }}/releases/download/${{ github.event.release.tag_name }}/nuh" -o output.zip || \
-          curl -L "https://github.com/${{ github.repository }}/releases/download/${{ github.event.release.tag_name }}/nuh.zip" -o output.zip
-          
-          unzip -q -o output.zip -d dist
-          rm -f output.zip
+      - - name: Extract Release Asset
+          run: |
+            mkdir -p dist
+            
+            
+            curl -sL \
+              -H "Accept: application/octet-stream" \
+              "https://github.com/${{ github.repository }}/releases/download/${{ github.event.release.tag_name }}/nuh.zip" \
+              -o output.zip
+  
+            
+            file output.zip
+            
+            unzip -q -o output.zip -d dist
+            rm -f output.zip
 
       - name: Deploy to Build Branch
         uses: peaceiris/actions-gh-pages@v3
