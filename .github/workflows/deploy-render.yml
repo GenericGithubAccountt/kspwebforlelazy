@@ -1,8 +1,11 @@
 name: Prepare Release for Render
 
 on:
+  # Allows you to manually trigger this workflow from the Actions tab
+  workflow_dispatch:
+
+  # Automatically triggers when a new release is published
   release:
-    workflow_dispatch: # Allows manual button clicks in GitHub UI
     types: [published]
 
 jobs:
@@ -15,11 +18,11 @@ jobs:
       # 1. Download and extract your release ZIP (or run your build command)
       - name: Extract Release Asset
         run: |
-          curl -L https://github.com/${{ github.repository }}/releases/download/${{ github.event.release.tag_name }}/your-build.zip -o output.zip
+          curl -L https://github/${{ github.repository }}/releases/download/${{ github.event.release.tag_name }}/your-build.zip -o output.zip
           mkdir -p dist
           unzip output.zip -d dist
 
-      # 2. Push extracted files to a deployment branch
+      # 2. Push extracted files to a deployment branch for Render
       - name: Deploy to Build Branch
         uses: peaceiris/actions-gh-pages@v3
         with:
