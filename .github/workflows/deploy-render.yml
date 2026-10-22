@@ -18,7 +18,7 @@ jobs:
       # 1. Download and extract your release ZIP (or run your build command)
       - name: Extract Release Asset
         run: |
-          curl -L https://github/${{ github.repository }}/releases/download/${{ github.event.release.tag_name }}/your-build.zip -o output.zip
+          curl -L https://github/${{ github.repository }}/releases/download/${{ github.event.release.tag_name }}/nuh.zip -o output.zip
           mkdir -p dist
           unzip output.zip -d dist
 
