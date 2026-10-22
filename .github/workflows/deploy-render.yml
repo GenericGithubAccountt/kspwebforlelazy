@@ -2,6 +2,7 @@ name: Prepare Release for Render
 
 on:
   release:
+    workflow_dispatch: # Allows manual button clicks in GitHub UI
     types: [published]
 
 jobs:
