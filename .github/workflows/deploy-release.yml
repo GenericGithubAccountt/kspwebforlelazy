@@ -1,17 +1,18 @@
-name: Deploy Release to GitHub Pages!!!
+name: Deploy Release to GitHub Pages
 
 on:
-  release:
-    workflow_dispatch: # Allows manual button clicks in GitHub UI
-    types: [published] # Triggers automatically when a new release is published
+  # Allows you to manually trigger this workflow from the Actions tab
+  workflow_dispatch:
 
-# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+  # Automatically triggers when a new release is published
+  release:
+    types: [published]
+
 permissions:
   contents: read
   pages: write
   id-token: write
 
-# Allow only one concurrent deployment
 concurrency:
   group: "pages"
   cancel-in-progress: true
@@ -23,23 +24,17 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      # OPTIONAL: If your site requires a build step (like npm run build), add it here.
-      # - name: Install and Build
-      #   run: |
-      #     npm ci
-      #     npm run build
-
       - name: Setup Pages
-        uses: actions/configure-pages@v4
+        uses: actions/configure-pages@v5
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          # Point this to your static files (e.g., '.' for root, or './dist' if you have a build step)
-          path: '.' 
+          # Folder containing your static site files to deploy
+          path: './dist'
 
       - name: Deploy to GitHub Pages
         id: deployment
