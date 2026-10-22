@@ -1,0 +1,27 @@
+name: Prepare Release for Render
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 1. Download and extract your release ZIP (or run your build command)
+      - name: Extract Release Asset
+        run: |
+          curl -L https://github.com/${{ github.repository }}/releases/download/${{ github.event.release.tag_name }}/your-build.zip -o output.zip
+          mkdir -p dist
+          unzip output.zip -d dist
+
+      # 2. Push extracted files to a deployment branch
+      - name: Deploy to Build Branch
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
+          publish_branch: render-deploy
