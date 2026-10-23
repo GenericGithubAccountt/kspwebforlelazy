@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: my-unity-webgl-game
+    env: static
+    staticPublishPath: ./
+    headers:
+      - path: /Build/*.data
+        name: Cache-Control
+        value: public, max-age=31536000, immutable
+      - path: /Build/*.wasm
+        name: Cache-Control
+        value: public, max-age=31536000, immutable
+      - path: /Build/*.framework.js
+        name: Cache-Control
+        value: public, max-age=31536000, immutable
+      - path: /Build/*.unityweb
+        name: Cache-Control
+        value: public, max-age=31536000, immutable
