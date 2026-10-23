@@ -5,6 +5,9 @@ on:
   release:
     types: [published]
 
+permissions:
+  contents: write
+
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
@@ -12,19 +15,18 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Extract Release Asset
+      - name: Extract and Split Large Files
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           mkdir -p dist
-          
-          # Download all release assets from the latest release automatically
           gh release download --dir dist --pattern "*.zip" || gh release download --dir dist
-          
-          # Unzip any downloaded zip file into dist
           cd dist
           unzip -q -o "*.zip" || true
           rm -f *.zip
+
+          # Find any file over 80MB and split it into 80MB parts (.part_aa, .part_ab, etc.)
+          find . -type f -size +80M -exec split -b 80M {} {}.part_ \; -exec rm {} \;
 
       - name: Deploy to Build Branch
         uses: peaceiris/actions-gh-pages@v3
